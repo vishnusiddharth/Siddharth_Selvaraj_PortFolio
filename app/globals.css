@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Dark is the default palette (matches the original design); light mode
+     overrides every token below via [data-theme="light"]. Colors are stored
+     as "R G B" triples so Tailwind's opacity modifiers (bg-amber/10, etc.)
+     keep working across both themes. */
+  :root {
+    color-scheme: dark;
+    --color-ground: 11 13 16;
+    --color-surface: 18 21 26;
+    --color-raised: 23 27 33;
+    --color-line: 35 41 49;
+    --color-ink: 230 233 236;
+    --color-muted: 139 147 157;
+    --color-amber: 240 178 62;
+    --color-amber-dim: 201 144 43;
+    --color-amber-glow: rgba(240, 178, 62, 0.14);
+    --glow-dot: rgba(230, 233, 236, 0.16);
+    /* Spotlight/cursor-glow color, kept separate from --color-amber so it
+       can run a different hue in light mode without touching the brand
+       color used for text/borders/buttons. */
+    --spotlight-rgb: 240 178 62;
+    --cursor-glow: rgb(var(--spotlight-rgb) / 0.28);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --color-ground: 247 246 243;
+    --color-surface: 255 255 255;
+    --color-raised: 241 239 234;
+    --color-line: 227 224 216;
+    --color-ink: 22 24 27;
+    --color-muted: 91 97 105;
+    /* Same amber as dark mode, by request — kept identical across themes
+       rather than deepened for contrast, so the brand color never shifts. */
+    --color-amber: 240 178 62;
+    --color-amber-dim: 201 144 43;
+    --color-amber-glow: rgba(240, 178, 62, 0.18);
+    --glow-dot: rgba(20, 23, 27, 0.12);
+    /* A hotter, more saturated orange than the brand amber — reads better
+       as a spotlight against a light background. */
+    --spotlight-rgb: 255 166 0;
+    --cursor-glow: rgb(var(--spotlight-rgb) / 0.22);
+  }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+  }
+  body { @apply bg-ground text-ink font-sans antialiased; }
+  :focus-visible { @apply outline-none ring-2 ring-amber ring-offset-2 ring-offset-ground rounded-sm; }
+  ::selection { background: rgba(240,178,62,.26); }
+}
+
+@layer components {
+  .shell { @apply mx-auto w-full max-w-content px-5 sm:px-8; }
+  .eyebrow { @apply font-mono text-[11px] uppercase tracking-[0.18em] text-amber; }
+  .card { @apply relative rounded-lg border border-line bg-surface; }
+  /* Terminal scanline texture, kept very subtle. */
+  .scan {
+    background-image: repeating-linear-gradient(
+      to bottom, transparent 0 3px, rgba(255,255,255,.012) 3px 4px
+    );
+  }
+
+  /* Mouse-tracked glow: a card sets --x/--y from pointer position (see
+     magicui/spotlight-card.tsx) and this overlay reads them. Inert until
+     JS sets the coordinates, and fully static under reduced motion. */
+  .spotlight-overlay {
+    /* Radius is the 480px circle, but the actual visible reach is set by
+       where it hits transparent — that crept out to 55% earlier, which
+       read as a bigger spotlight even at the same 480px. Pulled back in
+       to ~40% (tighter than the original 42%) while keeping the boosted
+       core alpha for intensity. */
+    background: radial-gradient(480px circle at var(--x, 50%) var(--y, 50%), rgb(var(--spotlight-rgb) / 0.7) 0%, rgb(var(--spotlight-rgb) / 0.3) 16%, transparent 40%);
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .group:hover .spotlight-overlay, .spotlight-overlay.is-active {
+    opacity: 1;
+  }
+
+  /* Site-wide cursor glow (magicui/cursor-spotlight.tsx), fixed to the
+     viewport. --cursor-glow flips intensity per theme in the :root blocks
+     above so it reads the same "brightness" against dark or light. */
+  .cursor-spotlight {
+    background: radial-gradient(700px circle at var(--cx, 50%) var(--cy, 30%), var(--cursor-glow), transparent 70%);
+  }
+
+  /* Rotating conic-gradient ring, masked down to a 1px border. Used to give
+     the hero terminal and hovered cards a "live" amber outline. */
+  @property --beam-angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+  }
+  .border-beam {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(from var(--beam-angle), transparent 0%, transparent 74%, rgba(240, 178, 62, 0.9) 84%, rgba(255, 224, 160, 1) 87%, rgba(240, 178, 62, 0.9) 90%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: beam-spin 4.5s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes beam-spin {
+    to { --beam-angle: 360deg; }
+  }
+}
