@@ -50,9 +50,9 @@ export function ContactCTA() {
           </div>
         </Reveal>
 
-        <Reveal direction="right" delay={0.1}>
+        {/* <Reveal direction="right" delay={0.1}>
           <ContactForm />
-        </Reveal>
+        </Reveal> */}
       </div>
     </Section>
   );

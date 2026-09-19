@@ -1,3 +1,5 @@
+import { withBasePath } from "./site";
+
 export type Metric = { value: string; label: string };
 
 export type CaseStudy = {
@@ -46,7 +48,7 @@ export const projects: Project[] = [
     github: null,
     demo: null,
     stars: null,
-    image: "/projects/web-suite.png",
+    image: withBasePath("/projects/web-suite.png"),
     imageAlt: "Dashboard interface from the React web application suite",
     featured: true,
     year: "2023 — Present",
@@ -105,7 +107,7 @@ export const projects: Project[] = [
     github: null,
     demo: null,
     stars: null,
-    image: "/projects/mobile.png",
+    image: withBasePath("/projects/mobile.png"),
     imageAlt: "Mobile application screens built with React Native and Ionic",
     featured: true,
     year: "2023 — Present",
@@ -164,7 +166,7 @@ export const projects: Project[] = [
     github: null,
     demo: null,
     stars: null,
-    image: "/projects/microservices.png",
+    image: withBasePath("/projects/microservices.png"),
     imageAlt: "Service architecture view showing API endpoints and response times",
     featured: true,
     year: "2023 — Present",
@@ -229,7 +231,7 @@ export const projects: Project[] = [
     github: null,
     demo: null,
     stars: null,
-    image: "/projects/white-label.png",
+    image: withBasePath("/projects/white-label.png"),
     imageAlt: "The same application shown in several client brand configurations",
     featured: false,
     year: "2023 — Present",

@@ -1,4 +1,12 @@
 /**
+ * Prefixes a root-relative path with the GitHub Pages sub-path.
+ * next/image doesn't auto-prefix basePath (only next/link does), so any
+ * local image or static asset referenced by a plain string needs this.
+ */
+export const withBasePath = (path: string) =>
+  `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${path}`;
+
+/**
  * Single source of truth for personal details.
  * Values below come from Siddharth Selvaraj's CV.
  */
@@ -11,10 +19,7 @@ export const site = {
   location: "Dindigul, India",
   email: "sidharthvish61@gmail.com",
   phone: "+91 94450 51562",
-  // Prefixed with the base path so it resolves under the GitHub Pages
-  // project sub-path (this raw <a> tag, unlike next/link or next/image,
-  // isn't auto-prefixed by Next's basePath handling).
-  resumeUrl: `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/projects/Sidd_resume.pdf`,
+  resumeUrl: withBasePath("/projects/Sidd_resume.pdf"),
   url: "https://vishnusiddharth.github.io/Siddharth_Selvaraj_PortFolio",
   yearsExperience: "4.1",
   funFact:
