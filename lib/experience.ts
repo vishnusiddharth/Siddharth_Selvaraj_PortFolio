@@ -23,7 +23,7 @@ export const experience: Role[] = [
     start: "08/2022",
     end: "08/2023",
     description:
-      "Designed and developed responsive React.js web applications focused on UI/UX implementation and user interaction flows. Converted designs into clean, reusable components following modular architecture and Clean Code practices, and resolved frontend bugs and UI performance issues using browser debugging and profiling tools.",
+      "Turned designs into responsive, pixel-accurate React.js interfaces with intuitive user flows. Built reusable UI components and fixed frontend bugs and performance issues.",
     tech: ["React JS", "JavaScript", "HTML", "CSS"],
   },
 ];
